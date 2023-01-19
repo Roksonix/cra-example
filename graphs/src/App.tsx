@@ -1,24 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import './App.css';
 import UnitsPerDate from './components/UnitsPerDate';
 
 function App() {
-  const [data, setData] = useState(null);
+  const { isLoading, data } = useQuery<ChartItem[]>("chart-data", async () => {
+    const result = await fetch("https://my.api.mockaroo.com/graph.json?key=158c1970");
 
-  useEffect(() => {
-    fetch("https://my.api.mockaroo.com/graph.json?key=158c1970")
-      .then(res => res.json())
-      .then(result => setData(result))
-  }, []);
+    return result.json();
+  });
 
   return (
     <div className="App">
       <header className="App-header">
-        {
-          !data
-            ? <p>Loading...</p>
-            : <UnitsPerDate data={data} />
-        }
+        <>
+          { isLoading && <p>Loading...</p> }
+          { data && <UnitsPerDate data={data} /> }
+        </>
       </header>
     </div>
   );
