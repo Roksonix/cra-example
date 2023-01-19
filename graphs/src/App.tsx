@@ -1,23 +1,24 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
+import UnitsPerDate from './components/UnitsPerDate';
 
 function App() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch("https://my.api.mockaroo.com/graph.json?key=158c1970")
+      .then(res => res.json())
+      .then(result => setData(result))
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {
+          !data
+            ? <p>Loading...</p>
+            : <UnitsPerDate data={data} />
+        }
       </header>
     </div>
   );
